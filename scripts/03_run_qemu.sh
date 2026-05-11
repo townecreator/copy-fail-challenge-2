@@ -3,7 +3,13 @@
 # Arranca la VM vulnerable en QEMU (modo consola serial)
 set -euo pipefail
 
-BUILD_DIR="/workspaces/copy-fail-challenge/kernel/build"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+BUSYBOX_SRC="$WORKSPACE_ROOT/kernel/busybox"
+INITRAMFS_DIR="$WORKSPACE_ROOT/kernel/initramfs"
+BUILD_DIR="$WORKSPACE_ROOT/kernel/build"
+
+
 BZIMAGE="$BUILD_DIR/bzImage_vuln"
 INITRAMFS="$BUILD_DIR/initramfs.cpio.gz"
 
