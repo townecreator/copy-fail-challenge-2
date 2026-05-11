@@ -25,7 +25,8 @@ cd "$BUSYBOX_SRC"
 echo -e "${CYAN}[2/6] Configurando BusyBox (binario estático)...${NC}"
 make defconfig
 # Compilación estática para no necesitar librerías externas
-scripts/config --enable BUILD_STATIC
+sed -i 's/# CONFIG_STATIC is not set/CONFIG_STATIC=y/' .config
+grep -q "CONFIG_STATIC=y" .config || echo "CONFIG_STATIC=y" >> .config
 make olddefconfig
 
 echo -e "${CYAN}[3/6] Compilando BusyBox...${NC}"
