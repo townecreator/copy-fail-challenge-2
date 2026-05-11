@@ -81,6 +81,7 @@ jobs:
           ./scripts/config --enable CRYPTO_USER_API          # AF_ALG socket
           ./scripts/config --enable CRYPTO_USER_API_AEAD     # algif_aead ← VULN
           ./scripts/config --enable CRYPTO_USER_API_SKCIPHER
+          ./scripts/config --enable CRYPTO_AEAD
           ./scripts/config --enable CRYPTO_AUTHENCESN        # scratch-write bug
           ./scripts/config --enable CRYPTO_AES
           ./scripts/config --enable CRYPTO_CBC
@@ -99,8 +100,8 @@ jobs:
           make olddefconfig
           
           # Verificar que el módulo vulnerable está habilitado
-          grep "CONFIG_CRYPTO_USER_API_AEAD" .config
-          grep "CONFIG_CRYPTO_AUTHENCESN" .config
+          grep "CONFIG_CRYPTO_USER_API_AEAD" .config && echo "✓ algif_aead habilitado" || echo "✗ ADVERTENCIA: no encontrado"
+          grep "CONFIG_CRYPTO_AUTHENCESN" .config && echo "✓ authencesn habilitado" || echo "✗ ADVERTENCIA: no encontrado"
 
       # ── 4. Compilar (4 cores en el runner de GitHub) ──────────────────────
       - name: Compilar bzImage
