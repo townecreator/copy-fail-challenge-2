@@ -11,7 +11,9 @@
 # Si todas fallan → instruye al estudiante a compilar con make kernel
 set -euo pipefail
 
-BUILD_DIR="/workspaces/copy-fail-challenge/kernel/build"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+BUILD_DIR="$WORKSPACE_ROOT/kernel/build"
 MANIFEST_FILE="$BUILD_DIR/kernel-manifest.json"
 
 # ── Configuración: el docente debe actualizar estos valores ──────────────────
