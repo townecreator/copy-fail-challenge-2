@@ -4,10 +4,15 @@
 # El parche revierte la optimización in-place de algif_aead.c (commit 72548b093ee3)
 # introducida en 2017, que es la raíz del bug.
 set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+BUSYBOX_SRC="$WORKSPACE_ROOT/kernel/busybox"
+INITRAMFS_DIR="$WORKSPACE_ROOT/kernel/initramfs"
+BUILD_DIR="$WORKSPACE_ROOT/kernel/build"
 
-KERNEL_SRC="/workspaces/copy-fail-challenge/kernel/linux"
-BUILD_DIR="/workspaces/copy-fail-challenge/kernel/build"
-PATCH_FILE="/workspaces/copy-fail-challenge/patches/fix_algif_aead.patch"
+KERNEL_SRC="$WORKSPACE_ROOT/kernel/linux"
+
+PATCH_FILE="$WORKSPACE_ROOT/patches/fix_algif_aead.patch"
 JOBS=$(nproc)
 
 GREEN='\033[1;32m'
