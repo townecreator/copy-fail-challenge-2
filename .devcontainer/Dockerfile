@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     binutils elfutils \
     bsdextrautils xxd \
     # Git y calificación
-    git jq \
+    git jq bzip2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Python 3.10+ ya está en ubuntu:24.04; verificamos os.splice
