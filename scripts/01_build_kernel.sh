@@ -73,6 +73,9 @@ scripts/config --enable PROC_FS
 scripts/config --enable SYSFS
 scripts/config --enable DEVTMPFS
 scripts/config --enable DEVTMPFS_MOUNT
+scripts/config --enable RD_GZIP        # descomprimir initramfs gzip
+scripts/config --enable BINFMT_ELF     # ejecutar binarios ELF (BusyBox)
+scripts/config --enable BINFMT_SCRIPT  # ejecutar scripts de shell (init)
 
 make olddefconfig
 
