@@ -4,9 +4,11 @@
 # Los estudiantes necesitan Python 3.10+ para ejecutar el PoC (os.splice)
 set -euo pipefail
 
-BUSYBOX_SRC="/workspaces/copy-fail-challenge/kernel/busybox"
-INITRAMFS_DIR="/workspaces/copy-fail-challenge/kernel/initramfs"
-BUILD_DIR="/workspaces/copy-fail-challenge/kernel/build"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+BUSYBOX_SRC="$WORKSPACE_ROOT/kernel/busybox"
+INITRAMFS_DIR="$WORKSPACE_ROOT/kernel/initramfs"
+BUILD_DIR="$WORKSPACE_ROOT/kernel/build"
 JOBS=$(nproc)
 
 GREEN='\033[1;32m'
