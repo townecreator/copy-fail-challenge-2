@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # Herramientas de análisis
     strace ltrace gdb \
     binutils elfutils \
-    hexdump xxd \
+    bsdextrautils xxd \
     # Git y calificación
     git jq \
     && rm -rf /var/lib/apt/lists/*
