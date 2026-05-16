@@ -95,4 +95,24 @@ HITO 2: Successful exploit using the .py archive containing malicious code.
 ![alt text](imagen-1.png)
 ![alt text](imagen-2.png)
 In here, we can see the successful exploit, as we used curl to copy the information containing the archive directly from the internet (this is possible as the debian VM is connected to the internet). We first check we have our own id and executing whoami shows us the name (in this case PaulaCevallos). But when we execute the exploit, we can see that we have become root.
+
+HITO 3: Temporal mitigation
+
+note: To guarantee effective mitigation in a production-ready environment prior to applying a permanent source-code patch (Milestone 4), running rmmod alone is insufficient. It is mandatory to enforce a module blacklist rule within /etc/modprobe.d/ to legally forbid the kernel from autoloading the driver, combined with flushing the corrupted memory using the /proc/sys/vm/drop_caches directive.
+
+Ironically, before we put in the commands, we need sudo access given to the specific user, in my case PaulaCevallos, so I'll use the exploit (that we have not yet patched up lol) to give myself sudo access, then, I'll reestart the VM:
+![alt text](imagen-4.png)
+![alt text](imagen-3.png)
+as we can see, we executed the following commands:
+echo "install algif_aead /bin/false" | sudo tee /atc/modprobe.d/disable-algif.conf
+sudo rmmod algif_aead 2>/dev/null || true
+grep -qE 'algif_aead ' /proc/modules && echo "Affected module is loaded" || echo "Affected module is NOT loaded"
+
+The first command disables the algif_aead module from being automatically reloaded by the system kernel. It uses echo to output a specific string configuration rule, which states that any attempt to install or load this specific module should run /bin/false (a command that does nothing and immediately fails) instead. This output string is redirected via a pipe (|) into the tee command, which runs with administrative root privileges via sudo. The tee utility writes this configuration string directly into a new configuration file located at the absolute path /etc/modprobe.d/disable-algif.conf, ensuring the kernel enforces this loading restriction.
+
+The second command immediately forces the active kernel to drop and unload the target module from the running system memory. It runs the rmmod (Remove Module) utility elevated with root privileges via sudo and passes algif_aead as the specific argument to target. To keep the script execution clean, standard error output (stderr) is redirected using 2> to the null device (/dev/null), which permanently discards any annoying error messages if the module was already absent. Finally, the conditional OR operator (||) hooks into the true utility, ensuring that even if the removal command fails, the entire shell line evaluates as a successful execution so automation scripts do not halt.
+
+The third command acts as a validation script to dynamically check whether the module remains active in the system runtime environment. It employs the grep utility with the quiet flag -q to suppress screen output and the extended regular expression flag -E to search for the specific pattern 'algif_aead ' inside the virtual file /proc/modules, which tracks all active kernel components. If grep finds a match, the logical AND operator (&&) triggers an echo command that prints "Affected module is loaded". If no match is found, the logical OR operator (||) acts as an else clause, executing an alternative echo command that prints "Affected module is NOT loaded" to confirm successful mitigation.
+
+
 Team, M. D. S. R. (2026, 2 mayo). CVE-2026-31431: Copy Fail vulnerability enables Linux root privilege escalation across cloud environments. Microsoft Security Blog. https://www.microsoft.com/en-us/security/blog/2026/05/01/cve-2026-31431-copy-fail-vulnerability-enables-linux-root-privilege-escalation/
